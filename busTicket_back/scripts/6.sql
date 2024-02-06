@@ -1,11 +1,9 @@
-DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE bookings (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    trip_id INT,
-    user_id INT,
-    seat_id INT,
-    FOREIGN KEY (trip_id) REFERENCES trips(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (seat_id) REFERENCES seats(id)
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    rol VARCHAR(10) NOT NULL CHECK (rol IN ('user', 'admin'))
 );

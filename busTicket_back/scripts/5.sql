@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS seats;
 
-CREATE TABLE users (
+CREATE TABLE seats (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    rol VARCHAR(10) NOT NULL CHECK (rol IN ('user', 'admin'))
+    bus_id INT,
+    isAvailable BOOLEAN NOT NULL,
+    identifier VARCHAR(10) NOT NULL,
+    FOREIGN KEY (bus_id) REFERENCES buses(id)
 );

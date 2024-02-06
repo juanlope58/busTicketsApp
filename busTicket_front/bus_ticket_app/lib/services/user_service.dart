@@ -9,7 +9,7 @@ class UserService {
 
   //Get all users (only for admins)
   Future<List<UserModel>> fetchUserList() async {
-    final response = await http.get(Uri.parse('$apiUrl/users'));
+    final response = await http.get(Uri.parse('$apiUrl/user/users'));
 
     if(response.statusCode == 200){
       List<dynamic> data = json.decode(response.body);
@@ -24,8 +24,8 @@ class UserService {
   //Register user
   Future<bool> registerUser(Map<String,dynamic> user) async {
     final response = await http.post(Uri.parse(
-      '$apiUrl/register'),
-      headers: {'content-type': 'aplication/json'},
+      '$apiUrl/user/register'),
+      headers: {'Content-Type': 'application/json'},
       body: json.encode(user),
     );
     if(response.statusCode == 201){

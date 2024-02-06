@@ -26,7 +26,7 @@ class BookingsScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         title: const Text('My Bookings',
           style: TextStyle(
-            fontSize: 30, 
+            fontSize: 30,
             fontWeight: FontWeight.bold
           ),
         ),
@@ -55,7 +55,6 @@ class BookingsScreen extends StatelessWidget {
                 subtitle: Center(
                   child: Text(
                     userBookings[index],
-                    style: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),

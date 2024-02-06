@@ -3,7 +3,7 @@ class CityModel {
   final String cityName;
 
   CityModel({
-    required this.id,
+    this.id = 0,
     required this.cityName
   });
 
@@ -12,6 +12,13 @@ class CityModel {
       id: json['id'],
       cityName: json['city_name']
     );
+  }
+
+  Map<String, dynamic> toJson(){
+    return{
+      'id' : id,
+      'city_name' : cityName,
+    };
   }
   
 }

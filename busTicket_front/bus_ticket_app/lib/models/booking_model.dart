@@ -32,5 +32,18 @@ class BookingModel {
 
     );
   }
+
+  Map<String, dynamic> toJson(){
+    return ({
+      'id':id,
+      'username':username,
+      'originCity':originCity,
+      'destinationCity' : destinationCity,
+      'date' : date,
+      'hour' : hour,
+      'seat' : seat,
+      'company' : company,
+    });
+  }
 }
 

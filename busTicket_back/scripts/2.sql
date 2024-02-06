@@ -1,7 +1,6 @@
-DROP TABLE IF EXISTS buses;
+DROP TABLE IF EXISTS companies;
 
-CREATE TABLE buses (
+CREATE TABLE companies (
     id SERIAL PRIMARY KEY,
-    company_name VARCHAR(255) NOT NULL,
-    seats INT NOT NULL
+    company_name VARCHAR(255) NOT NULL
 );
