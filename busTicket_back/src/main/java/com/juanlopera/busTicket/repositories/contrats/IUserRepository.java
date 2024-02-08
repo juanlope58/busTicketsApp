@@ -2,9 +2,8 @@ package com.juanlopera.busTicket.repositories.contrats;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.juanlopera.busTicket.entities.Company;
+import com.juanlopera.busTicket.entities.User;
 
-
-public interface ICompanyRepository extends JpaRepository<Company,Long> {
+public interface IUserRepository extends JpaRepository<User, Long >{
     
 }

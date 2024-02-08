@@ -1,0 +1,3 @@
+FROM openjdk:17-jdk-alpine
+COPY target/busTicket_back-0.0.1-SNAPSHOT.jar busTicket_back.jar
+ENTRYPOINT [ "java","-jar", "busTicket_back.jar" ]

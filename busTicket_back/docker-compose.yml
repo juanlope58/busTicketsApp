@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  # back_busticket:
+  #     container_name: back_busticket
+  #     image: busticket_app:1.0.0
+  #     build: .
+  #     ports: 
+  #       - "8080:8080"
+  #     environment:
+  #       SPRING_DATASOURCE_URL: jdbc:postgresql://db_busticket:5432/postgres
+  #       SPRING_DATASOURCE_USERNAME: postgres
+  #       SPRING_DATASOURCE_PASSWORD: postgres
+  #     depends_on: 
+  #       - db_busticket
+
   db_busticket:
       image: "postgres"
       container_name: db_busticket
