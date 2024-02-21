@@ -16,7 +16,7 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*"); // Permite cualquier origen para pruebas locales
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/api/**", config); // Puedes ajustar el patrón URL según tus necesidades
+        source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
 }

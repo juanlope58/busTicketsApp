@@ -35,6 +35,8 @@ public class BookingController {
         }
     }
 
+    
+
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBooking(@PathVariable Long id) {
         try {

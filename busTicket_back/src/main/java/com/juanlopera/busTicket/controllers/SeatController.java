@@ -44,8 +44,6 @@ public class SeatController {
         }
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Seat> getSeat(@PathVariable Long id) {
         try {

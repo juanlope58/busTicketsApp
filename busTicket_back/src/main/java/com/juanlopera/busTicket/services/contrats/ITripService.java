@@ -1,5 +1,6 @@
 package com.juanlopera.busTicket.services.contrats;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.juanlopera.busTicket.dto.TripRequest;
@@ -11,4 +12,5 @@ public interface ITripService {
     public Trip create(TripRequest tripRequest);
     public Trip update(Long id, Trip trip);
     public Boolean delete(Long id);
+    public List<Trip> getFilteredTrips(Long originCityId, Long destinationCityId, LocalDate date);
 }

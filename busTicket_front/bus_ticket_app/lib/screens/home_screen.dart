@@ -1,6 +1,14 @@
-import 'package:bus_ticket_app/data/cities.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:bus_ticket_app/models/city.dart';
+import 'package:bus_ticket_app/models/trip.dart';
+import 'package:bus_ticket_app/screens/trips_page.dart';
+import 'package:bus_ticket_app/services/city_service.dart';
+import 'package:bus_ticket_app/services/trip_service.dart';
 import 'package:bus_ticket_app/utils/adapt.dart';
+import 'package:bus_ticket_app/utils/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,18 +19,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<String> cities = [];
-  String selectedOriginCity = ' ';
-  String selectedDestinationCity = ' ';
+  Logger logger = Logger();
+  List<City> cities = [];
+  int selectedOriginCityId = 0;
+  int selectedDestinationCityId = 0;
   DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    cities = ['Select City', ...listCities];
-    if (cities.isNotEmpty){
-        selectedOriginCity = cities.first;
-        selectedDestinationCity = cities.first;
+    fetchDataFromBack();
+  }
+
+  Future<void> fetchDataFromBack() async {
+    BuildContext currentContext = context;
+
+    final cityService = CityService();
+    try {
+      final List<City> cityData = await cityService.listAll();
+
+      setState(() {
+        cities = cityData;
+      });
+    } catch (e) {
+      CustomSnackBar.showError(currentContext, 'Failed to register city. Please try again.');
     }
   }
 
@@ -40,9 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         height: Adapt.hp(50, context),
-        margin: const EdgeInsets.all(20),
+        margin: EdgeInsets.all(Adapt.px(20)),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Adapt.px(10)),
           color: Colors.grey.withOpacity(0.2)),
         child: SingleChildScrollView(
           child: Padding(
@@ -51,20 +71,27 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   //origin city field
-                  DropdownButtonFormField<String>(
-                    
-                    value: selectedOriginCity,
-                    items: cities.map((String city) {
-                      return DropdownMenuItem<String>(
-                        value: city,
-                        enabled: city != 'Select City',
-                        child: Text(city,style: TextStyle(fontSize: Adapt.px(20)),),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
+                  DropdownButtonFormField<int>(
+                    value: selectedOriginCityId,
+                    items: [
+                      DropdownMenuItem<int>(
+                        value: 0,
+                        enabled: false,
+                        child: Text('Select Origin City', style: TextStyle(fontSize: Adapt.px(30)),),
+                      ),
+                      ...cities.map((City city) {
+                        return DropdownMenuItem<int>(
+                          value: city.id,
+                          enabled: city.id != 0,
+                          child: Text(city.cityName,style: TextStyle(fontSize: Adapt.px(30)),),
+                        );
+                      }).toList(),
+                    ],
+                    onChanged: (int? value) {
                       setState(() {
-                        selectedOriginCity = value!;
+                        selectedOriginCityId = value ?? 0;
                       });
                     },
                     decoration: InputDecoration(
@@ -75,28 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 16.0),
               
                   // destination city field
-                  DropdownButtonFormField<String>(
-                    value: selectedDestinationCity,
-                    items: cities.map((String city) {
-                      return DropdownMenuItem<String>(
-                        value: city,
-                        enabled: city != 'Select City',
-                        child: Text(city,style: const TextStyle(fontSize: 20),),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
+                  DropdownButtonFormField<int>(
+                    value: selectedDestinationCityId,
+                    items: [
+                      DropdownMenuItem(
+                        value: 0,
+                        enabled: false,
+                        child: Text('Select Origin City', style: TextStyle(fontSize: Adapt.px(30)),),
+                      ),
+                      ...cities.map((City city) {
+                        return DropdownMenuItem<int>(
+                          value: city.id,
+                          enabled: city.id != 0,
+                          child: Text(city.cityName,style: TextStyle(fontSize: Adapt.px(30)),),
+                        );
+                        }).toList(),
+                      ],
+                    onChanged: (int? value) {
                       setState(() {
-                        selectedDestinationCity = value!;
+                        selectedDestinationCityId = value ?? 0;
                       });
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Destination City',
-                      labelStyle: TextStyle(fontSize: 22, color: Colors.blue)
+                      labelStyle: TextStyle(fontSize: Adapt.px(30), color: Colors.blue)
                     ),
                   ),
                   const SizedBox(height: 16.0),
               
-                  // Campo de selección de fecha
+                  // select date field
                   InkWell(
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
@@ -112,9 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     child: InputDecorator(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Date',
-                        labelStyle: TextStyle(fontSize: 22, color: Colors.blue)
+                        labelStyle: TextStyle(fontSize: Adapt.px(30), color: Colors.blue)
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,14 +161,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16.0),
+                  SizedBox(height: Adapt.hp(5, context)),
               
-                  // Botón para proceder con la búsqueda
+                  // search button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        
+                      onPressed: () async {
+                        BuildContext currentContext = context;
+                        if (selectedOriginCityId != 0 && selectedDestinationCityId != 0) {
+                          try {
+                            List<Trip> filteredTrips = await TripService().getFilteredTrips(selectedOriginCityId, selectedDestinationCityId, selectedDate);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (currentContext) => TripsPage(filteredTrips: filteredTrips),
+                              ),
+                            );
+                          } catch (e) {
+                            logger.e('Error: $e');
+                          }
+                        } else {
+                          CustomSnackBar.showError(currentContext, 'Please, complete all fields.');
+                        }
                       },
                       child: const Text('Search Trip', style: TextStyle(fontSize: 20),),
                     ),

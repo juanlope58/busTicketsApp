@@ -1,5 +1,5 @@
 import 'package:bus_ticket_app/screens/bookings_screen.dart';
-import 'package:bus_ticket_app/screens/cities_screen.dart';
+// import 'package:bus_ticket_app/screens/cities_screen.dart';
 import 'package:bus_ticket_app/screens/help_screen.dart';
 import 'package:bus_ticket_app/screens/home_screen.dart';
 import 'package:bus_ticket_app/screens/my_account_screen.dart';
@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List<Widget> _screens = [const HomeScreen(), BookingsScreen(), const HelpScreen(), const MyAccountScreen(), const CitiesScreen()];
+  final List<Widget> _screens = [const HomeScreen(), BookingsScreen(), const HelpScreen(), MyAccountScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.card_travel, size: 40,), label: 'Bookings'),
             BottomNavigationBarItem(icon: Icon(Icons.live_help_rounded,size: 40,), label: 'help'),
             BottomNavigationBarItem(icon: Icon(Icons.person, size:40), label: 'My Account'),
-            BottomNavigationBarItem(icon: Icon(Icons.person, size:40), label: 'Cities'),
+            // BottomNavigationBarItem(icon: Icon(Icons.person, size:40), label: 'Cities'),
           ],
           type: BottomNavigationBarType.fixed, // Asegura que los labels siempre estén visibles
           selectedItemColor: Colors.white, // Color de resaltado cuando se toca un ítem

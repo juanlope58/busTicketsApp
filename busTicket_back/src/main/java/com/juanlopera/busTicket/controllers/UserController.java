@@ -1,6 +1,8 @@
 package com.juanlopera.busTicket.controllers;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.juanlopera.busTicket.dto.CreateUserRequest;
+import com.juanlopera.busTicket.entities.ERole;
+import com.juanlopera.busTicket.entities.Role;
 import com.juanlopera.busTicket.entities.User;
 import com.juanlopera.busTicket.services.contrats.IUserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -45,9 +52,22 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         try {
-            User newUser = userService.create(user);
+            Set<Role> roles = createUserRequest.getRoles().stream()
+                .map(role -> Role.builder()
+                    .role(ERole.valueOf(role))
+                    .build())
+                .collect(Collectors.toSet());
+
+            User newUser = User.builder()
+                .name(createUserRequest.getName())
+                .username(createUserRequest.getUsername())
+                .email(createUserRequest.getEmail())
+                .password(createUserRequest.getPassword())
+                .build();
+
+            userService.create(newUser);
             return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

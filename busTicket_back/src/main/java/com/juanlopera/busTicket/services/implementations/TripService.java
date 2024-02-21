@@ -15,6 +15,7 @@ import com.juanlopera.busTicket.services.contrats.ITripService;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,5 +89,9 @@ public class TripService implements ITripService{
         } else {
             throw new EntityNotFoundException("Trip not found");
         }
+    }
+
+    public List<Trip> getFilteredTrips(Long originCityId, Long destinationCityId, LocalDate date) {
+        return tripRepository.findByOriginCityIdAndDestinationCityIdAndDate(originCityId, destinationCityId, date);
     }
 }
